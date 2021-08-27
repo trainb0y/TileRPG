@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class TagHandler : MonoBehaviour
 {
-    public string[] tags;
+    public List<string> tags;
+
+    private void Awake()
+    {
+        tags = new List<string>();
+    }
     public bool HasTag(string tagToFind)
     {
         foreach (string tag in tags)
@@ -15,6 +20,7 @@ public class TagHandler : MonoBehaviour
         }
         return false;
     }
+
     public static GameObject FindObjectWithCustomTag(string tag)
     {
 

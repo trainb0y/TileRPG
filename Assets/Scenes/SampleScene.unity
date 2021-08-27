@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 50
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -248,10 +248,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c64698d73cb534aa89414740603dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMax: 20
-  yMax: 20
+  xMax: 100
+  yMax: 100
   chunkSize: 10
-  stone: {fileID: 11400000, guid: 60d6e67ab2518e44590a6183929650e8, type: 2}
+  placeholderTile: {fileID: 11400000, guid: 615740bede2e52a4eb0d7cbdaaf518ea, type: 2}
+  caveFreq: 0.05
+  terrainFreq: 0.05
+  caveCutoff: 0.3
+  seed: 0
+  biomes:
+  - name: Plains
+    generateCaves: 1
+    heightAddition: 40
+    heightMultiplier: 10
+    grassTile: {fileID: 11400000, guid: f0ee4f2d802592d429293ce0c1d38ebc, type: 2}
+    dirtTile: {fileID: 11400000, guid: 34c7ce60ef04d53409ec4d618a1c0a5f, type: 2}
+    stoneTile: {fileID: 11400000, guid: 60d6e67ab2518e44590a6183929650e8, type: 2}
+    dirtHeight: 5
+    ores:
+    - name: Gem
+      ore: {fileID: 11400000, guid: 4da28649384121a4cbc1da2e7c3ea935, type: 2}
+      rarity: 0.149
+      size: 0.838
+      maxSpawnHeight: 30
+      spreadTexture: {fileID: 0}
 --- !u!4 &1987037134
 Transform:
   m_ObjectHideFlags: 0

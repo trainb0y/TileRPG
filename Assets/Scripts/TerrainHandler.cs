@@ -164,12 +164,14 @@ public class TerrainHandler : MonoBehaviour
                 fg.AddComponent<TilemapRenderer>();
                 fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
                 fg.AddComponent<TilemapCollider2D>();
+                fg.isStatic = true;
                 fg.transform.parent = chunk.transform;
 
                 GameObject bg = new GameObject { name = "bg" };
                 bg.AddComponent<Tilemap>();
                 bg.AddComponent<TilemapRenderer>();
                 bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
+                bg.isStatic = true;
                 bg.GetComponent<Tilemap>().color = new Color(0.5f, 0.5f, 0.5f); // temporary, dims the background a bit
                 bg.transform.parent = chunk.transform;
 

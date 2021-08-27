@@ -10,7 +10,7 @@ public class TerrainHandler : MonoBehaviour
 
     public Tile stone;
 
-    private GameObject[] chunks;
+    private GameObject[,] chunks;
 
     private Grid grid;
 
@@ -35,16 +35,18 @@ public class TerrainHandler : MonoBehaviour
         CreateTerrain();
     }
 
-    public GameObject GetChunk(int x)
+    public GameObject GetChunk(int x, int y)
     {
-        float chunkCoord = (Mathf.Round(x / chunkSize) * chunkSize);
-        chunkCoord /= chunkSize;
+        float chunkX= (Mathf.Round(x / chunkSize) * chunkSize);
+        float chunkY = (Mathf.Round(y / chunkSize) * chunkSize);
+        chunkY /= chunkSize;
+        chunkX /= chunkSize;
 
-        return chunks[(int) chunkCoord];
+        return chunks[(int) chunkX, (int) chunkY];
     }
     void PlaceTile(int x, int y, Tile tile, bool background=false)
     {
-        GameObject chunk = GetChunk(x);
+        GameObject chunk = GetChunk(x,y);
         GameObject obj;
         if (background)
         {
@@ -59,32 +61,36 @@ public class TerrainHandler : MonoBehaviour
         tilemap.SetTile(new Vector3Int(x, y, 0), tile);
 
     }
-
+    
     void CreateChunks()
     {
-        int numChunks = xMax / chunkSize;
-        chunks = new GameObject[numChunks];
-        for (int i = 0; i < numChunks; i++)
+        int numChunksX = xMax / chunkSize;
+        int numChunksY = yMax / chunkSize;
+        chunks = new GameObject[numChunksX, numChunksY];
+        for (int x = 0; x < numChunksX; x++)
         {
-            GameObject chunk = new GameObject();
-            chunk.name = "chunk_" + i.ToString();
-            chunk.transform.parent = transform;
-            chunk.isStatic = true;
+            for (int y = 0; y < numChunksY; y++)
+            {
+                GameObject chunk = new GameObject();
+                chunk.name = "chunk_" + x.ToString() + "_" + y.ToString();
+                chunk.transform.parent = transform;
+                chunk.isStatic = true;
 
-            GameObject fg = new GameObject{name = "fg"};
-            fg.AddComponent<Tilemap>();
-            fg.AddComponent<TilemapRenderer>();
-            fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
-            fg.AddComponent<TilemapCollider2D>();
-            fg.transform.parent = chunk.transform;
+                GameObject fg = new GameObject { name = "fg" };
+                fg.AddComponent<Tilemap>();
+                fg.AddComponent<TilemapRenderer>();
+                fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
+                fg.AddComponent<TilemapCollider2D>();
+                fg.transform.parent = chunk.transform;
 
-            GameObject bg = new GameObject { name = "bg"};
-            bg.AddComponent<Tilemap>();
-            bg.AddComponent<TilemapRenderer>();
-            bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
-            bg.transform.parent = chunk.transform;
+                GameObject bg = new GameObject { name = "bg" };
+                bg.AddComponent<Tilemap>();
+                bg.AddComponent<TilemapRenderer>();
+                bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
+                bg.transform.parent = chunk.transform;
 
-            chunks[i] = chunk;
+                chunks[x,y] = chunk;
+            }
         }
     }
 

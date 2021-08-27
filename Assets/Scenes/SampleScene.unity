@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xMax: 20
-  yMax: 10
+  yMax: 20
   chunkSize: 10
   stone: {fileID: 11400000, guid: 60d6e67ab2518e44590a6183929650e8, type: 2}
 --- !u!4 &1987037134

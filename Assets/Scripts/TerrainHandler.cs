@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class TerrainHandler : MonoBehaviour
 {
@@ -9,12 +8,55 @@ public class TerrainHandler : MonoBehaviour
 
     public int chunkSize = 10;
 
+    public Tile stone;
+
     private GameObject[] chunks;
 
-    // Start is called before the first frame update
+    private Grid grid;
+
+    /*
+     
+    The world is divided into chunks
+
+    The chunks are tilemaps
+
+    This comment is pointless
+
+     */
+    
+
+
     void Start()
     {
         CreateChunks();
+        PlaceTile(1, 1, stone);
+        PlaceTile(30, 10, stone);
+        //CreateTerrain();
+    }
+
+    public GameObject GetChunk(int x)
+    {
+        float chunkCoord = (Mathf.Round(x / chunkSize) * chunkSize);
+        chunkCoord /= chunkSize;
+
+        return chunks[(int) chunkCoord];
+    }
+    void PlaceTile(int x, int y, Tile tile, bool background=false)
+    {
+        GameObject chunk = GetChunk(x);
+        GameObject obj;
+        if (background)
+        {
+            obj = chunk.transform.Find("bg").gameObject;
+        }
+        else
+        {
+            obj = chunk.transform.Find("fg").gameObject;
+        }
+
+        Tilemap tilemap = obj.GetComponent<Tilemap>();
+        tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+
     }
 
     void CreateChunks()
@@ -25,14 +67,35 @@ public class TerrainHandler : MonoBehaviour
         {
             GameObject chunk = new GameObject();
             chunk.name = i.ToString();
-            chunk.transform.parent = this.transform;
+            chunk.isStatic = true;
+
+            GameObject fg= new GameObject();
+            fg.name = "fg";
+            fg.AddComponent<Tilemap>();
+            fg.AddComponent<TilemapRenderer>();
+            fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
+            fg.AddComponent<TilemapCollider2D>();
+            fg.transform.parent = chunk.transform;
+
+            GameObject bg = new GameObject();
+            bg.name = "bg";
+            bg.AddComponent<Tilemap>();
+            bg.AddComponent<TilemapRenderer>();
+            bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
+            bg.transform.parent = chunk.transform;
+
             chunks[i] = chunk;
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void CreateTerrain()
     {
-        
+        for (int x = 0; x < xMax; x++)
+        {
+            for (int y = 0; y < xMax; y++)
+            {
+                PlaceTile(x, y, stone);
+            }
+        }
     }
 }

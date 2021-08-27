@@ -3,10 +3,12 @@ using UnityEngine.Tilemaps;
 
 public class TerrainHandler : MonoBehaviour
 {
+    [Header("General Settings")]
     public int xMax = 100;
     public int yMax = 100;
-
     public int chunkSize = 10;
+    [Header("Biome Settings")]
+    public Biome[] biomes;
 
     public Tile stone;
 
@@ -32,6 +34,7 @@ public class TerrainHandler : MonoBehaviour
     void Start()
     {
         CreateChunks();
+        AssignBiomes();
         CreateTerrain();
     }
 
@@ -92,6 +95,21 @@ public class TerrainHandler : MonoBehaviour
                 chunks[x,y] = chunk;
             }
         }
+    }
+
+    void AssignBiomes()
+    {
+        // We have to assign biomes for each vertical stack of chunks
+        Biome lastBiome = biomes[0];
+
+        for (int x = 0; x < chunks.GetLength(0); x++)
+        {
+            for (int y = 0; y < chunks.GetLength(1); y++)
+            {
+                chunks[x,y].GetComponent<TagHandler>()
+            }
+        }
+
     }
 
     void CreateTerrain()

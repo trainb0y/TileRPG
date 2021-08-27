@@ -18,7 +18,10 @@ public class TerrainHandler : MonoBehaviour
      
     The world is divided into chunks
 
-    The chunks are tilemaps
+    The chunks are gameobjects
+
+    Each chunk has 2 tilemaps as children, one for foreground
+    one for background.
 
     This comment is pointless
 
@@ -29,9 +32,7 @@ public class TerrainHandler : MonoBehaviour
     void Start()
     {
         CreateChunks();
-        PlaceTile(1, 1, stone);
-        PlaceTile(30, 10, stone);
-        //CreateTerrain();
+        CreateTerrain();
     }
 
     public GameObject GetChunk(int x)
@@ -66,19 +67,18 @@ public class TerrainHandler : MonoBehaviour
         for (int i = 0; i < numChunks; i++)
         {
             GameObject chunk = new GameObject();
-            chunk.name = i.ToString();
+            chunk.name = "chunk_" + i.ToString();
+            chunk.transform.parent = transform;
             chunk.isStatic = true;
 
-            GameObject fg= new GameObject();
-            fg.name = "fg";
+            GameObject fg = new GameObject{name = "fg"};
             fg.AddComponent<Tilemap>();
             fg.AddComponent<TilemapRenderer>();
             fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
             fg.AddComponent<TilemapCollider2D>();
             fg.transform.parent = chunk.transform;
 
-            GameObject bg = new GameObject();
-            bg.name = "bg";
+            GameObject bg = new GameObject { name = "bg"};
             bg.AddComponent<Tilemap>();
             bg.AddComponent<TilemapRenderer>();
             bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";

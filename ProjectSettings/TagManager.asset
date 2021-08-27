@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Tiles-BG
+    uniqueID: 268564791
+    locked: 0
+  - name: Tiles-FG
+    uniqueID: 750991837
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

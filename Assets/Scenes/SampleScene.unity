@@ -459,6 +459,7 @@ GameObject:
   - component: {fileID: 1987037134}
   - component: {fileID: 1987037133}
   - component: {fileID: 1987037132}
+  - component: {fileID: 1987037135}
   m_Layer: 0
   m_Name: TerrainHandler
   m_TagString: Untagged
@@ -490,9 +491,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c64698d73cb534aa89414740603dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMax: 240
-  yMax: 120
-  chunkSize: 30
+  xMax: 400
+  yMax: 200
+  chunkSize: 25
   placeholderTile: {fileID: 11400000, guid: 615740bede2e52a4eb0d7cbdaaf518ea, type: 2}
   caveFreq: 0.05
   terrainFreq: 0.05
@@ -528,3 +529,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1987037135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987037131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f129cfc956f2653478516737a7fdaed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chunkPadding: 1
+  terrain: {fileID: 1987037133}

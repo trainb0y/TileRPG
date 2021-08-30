@@ -105,7 +105,7 @@ public class TerrainHandler : MonoBehaviour
         Debug.LogWarning("No biome for " + chunk.name);
         return null;
     }
-    void PlaceTile(int x, int y, Tile tile, bool background=false)
+    void PlaceTile(int x, int y, Tile tile, bool background=false, bool updateLighting = false)
     {
         GameObject chunk = GetChunk(x,y);
         GameObject obj;
@@ -120,6 +120,11 @@ public class TerrainHandler : MonoBehaviour
 
         Tilemap tilemap = obj.GetComponent<Tilemap>();
         tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+
+        if (updateLighting)
+        {
+            UpdateLighting(x, y);
+        }
 
     }
     
@@ -301,5 +306,9 @@ public class TerrainHandler : MonoBehaviour
                     if (caveNoiseTexture.GetPixel(x, y).r < 0.5) { PlaceTile(x, y, null); }
             }
         }
+    }
+    void UpdateLighting()
+    {
+
     }
 }

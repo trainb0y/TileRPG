@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 127664125}
   - component: {fileID: 127664124}
   - component: {fileID: 127664129}
+  - component: {fileID: 127664130}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -321,6 +322,21 @@ MonoBehaviour:
   OnCrouchEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &127664130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127664123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c2d50d8302e32440804a465f6839776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 1987037133}
+  mainCamera: {fileID: 519420031}
+  tile: {fileID: 11400000, guid: 615740bede2e52a4eb0d7cbdaaf518ea, type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

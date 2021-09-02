@@ -105,7 +105,7 @@ public class TerrainHandler : MonoBehaviour
         Debug.LogWarning("No biome for " + chunk.name);
         return null;
     }
-    void PlaceTile(int x, int y, Tile tile, bool background=false)
+    public void PlaceTile(int x, int y, Tile tile, bool background=false)
     {
         GameObject chunk = GetChunk(x,y);
         GameObject obj;

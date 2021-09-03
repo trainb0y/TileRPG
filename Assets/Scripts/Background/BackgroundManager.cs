@@ -51,7 +51,15 @@ public class BackgroundManager : MonoBehaviour
         renderer.sortingOrder = template.sortingOrder;
         renderer.sortingLayerName = "Backgrounds";
         renderer.drawMode = SpriteDrawMode.Tiled;
-        renderer.size = new Vector2(renderer.size.x * 3, renderer.size.y);
+
+        if (template.infiniteX){
+            renderer.size = new Vector2(renderer.size.x * 3, renderer.size.y);
+        }
+        if (template.infiniteY)
+        {
+            renderer.size = new Vector2(renderer.size.x, renderer.size.y * 3);
+        }
+        
         
 
         

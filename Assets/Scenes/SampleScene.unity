@@ -286,7 +286,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127664123}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50, y: 200, z: 0}
+  m_LocalPosition: {x: 50, y: 100, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 15015883}
@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 1987037133}
   - component: {fileID: 1987037132}
   - component: {fileID: 1987037135}
+  - component: {fileID: 1987037136}
   m_Layer: 0
   m_Name: TerrainHandler
   m_TagString: Untagged
@@ -531,6 +532,13 @@ MonoBehaviour:
       size: 0.838
       maxSpawnHeight: 30
       spreadTexture: {fileID: 0}
+    backgrounds:
+    - name: Hills
+      sprite: {fileID: 21300000, guid: eb1ecda9f8faac24a9f6eebb8c354161, type: 3}
+      offset: {x: 50, y: 100}
+      infiniteX: 1
+      infiniteY: 0
+      parralaxMultiplier: {x: 0.6, y: 0.2}
 --- !u!4 &1987037134
 Transform:
   m_ObjectHideFlags: 0
@@ -552,10 +560,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987037131}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f129cfc956f2653478516737a7fdaed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chunkPadding: 1
   terrain: {fileID: 1987037133}
+--- !u!114 &1987037136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987037131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f160ffb68191a843a942db898dde68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 1987037133}
+  playerTransform: {fileID: 127664128}

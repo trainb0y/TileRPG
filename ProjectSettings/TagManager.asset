@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Backgrounds
+    uniqueID: 4027035671
+    locked: 0
   - name: Tiles-BG
     uniqueID: 268564791
     locked: 0

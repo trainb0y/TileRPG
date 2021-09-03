@@ -1,9 +1,13 @@
 using UnityEngine.Tilemaps;
+using UnityEngine;
 
 [System.Serializable]
 public class Biome 
-{ 
+{
+    [Header("General Settings")]
     public string name;
+
+    [Header("Generation")]
     public bool generateCaves = true;
     public int heightAddition;
     public int heightMultiplier;
@@ -15,4 +19,7 @@ public class Biome
     public int dirtHeight = 5;
 
     public Ore[] ores;
+
+    public Background[] backgrounds;
+
 }

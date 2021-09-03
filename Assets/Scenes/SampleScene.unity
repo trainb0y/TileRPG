@@ -535,7 +535,8 @@ MonoBehaviour:
     backgrounds:
     - name: Hills
       sprite: {fileID: 21300000, guid: eb1ecda9f8faac24a9f6eebb8c354161, type: 3}
-      offset: {x: 50, y: 100}
+      sortingOrder: 0
+      offset: {x: 50, y: 70, z: 0}
       infiniteX: 1
       infiniteY: 0
       parralaxMultiplier: {x: 0.6, y: 0.2}
@@ -560,7 +561,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987037131}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f129cfc956f2653478516737a7fdaed4, type: 3}
   m_Name: 

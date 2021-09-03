@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class BackgroundManager : MonoBehaviour
-// A modified and expanded version of
-// https://www.youtube.com/watch?v=wBol2xzxCOU
 {
     public TerrainHandler terrain;
     public Transform playerTransform;

@@ -404,7 +404,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -517,7 +517,7 @@ MonoBehaviour:
   caveCutoff: 0.3
   seed: 0
   biomes:
-  - name: Plains
+  - name: Base
     generateCaves: 1
     heightAddition: 40
     heightMultiplier: 10
@@ -533,13 +533,27 @@ MonoBehaviour:
       maxSpawnHeight: 30
       spreadTexture: {fileID: 0}
     backgrounds:
-    - name: Hills
-      sprite: {fileID: 21300000, guid: eb1ecda9f8faac24a9f6eebb8c354161, type: 3}
-      sortingOrder: 0
-      offset: {x: 50, y: 70, z: 0}
+    - name: Mountain-Background
+      sprite: {fileID: 21300000, guid: 3e8832c80efdef9498a7761af1d566f8, type: 3}
+      sortingOrder: -5
+      offset: {x: 50, y: 55, z: 0}
       infiniteX: 1
       infiniteY: 0
-      parralaxMultiplier: {x: 0.6, y: 0.2}
+      parralaxMultiplier: {x: 0.85, y: 0.1}
+    - name: Mountain-Foreground
+      sprite: {fileID: 21300000, guid: 4f3307e1153d5ce4faceef6eb7bea5f6, type: 3}
+      sortingOrder: -4
+      offset: {x: 50, y: 55, z: 0}
+      infiniteX: 1
+      infiniteY: 0
+      parralaxMultiplier: {x: 0.8, y: 0.12}
+    - name: Trees
+      sprite: {fileID: 21300000, guid: e6353a447fdb03f449c4ba8ee04c6fee, type: 3}
+      sortingOrder: -3
+      offset: {x: 50, y: 53, z: 0}
+      infiniteX: 1
+      infiniteY: 0
+      parralaxMultiplier: {x: 0.7, y: 0.2}
 --- !u!4 &1987037134
 Transform:
   m_ObjectHideFlags: 0

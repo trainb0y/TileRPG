@@ -2,7 +2,8 @@ using UnityEngine.Tilemaps;
 using UnityEngine;
 
 [System.Serializable]
-public class Biome 
+[CreateAssetMenu()]
+public class Biome : ScriptableObject
 {
     [Header("General Settings")]
     public string name;

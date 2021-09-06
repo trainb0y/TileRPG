@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
-public class Ore
+[CreateAssetMenu()]
+public class Ore: ScriptableObject
 {
     public string name;
     public Tile ore;

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Serializable]
 [CreateAssetMenu()]
 public class Ore: ScriptableObject
 {

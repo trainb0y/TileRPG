@@ -1,7 +1,6 @@
 using UnityEngine.Tilemaps;
 using UnityEngine;
 
-[System.Serializable]
 [CreateAssetMenu()]
 public class Biome : ScriptableObject
 {

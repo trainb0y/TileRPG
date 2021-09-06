@@ -13,7 +13,6 @@ public class TerrainHandler : MonoBehaviour
     public float terrainFreq = 0.05f;
     public float caveCutoff = 0.3f;
     public float seed;
-    [Header("Biome Settings")]
     public Biome[] biomes;
 
     private GameObject[,] chunks;
@@ -45,18 +44,25 @@ public class TerrainHandler : MonoBehaviour
             {
                 ore.spreadTexture = new Texture2D(xMax, yMax);
                 GenerateNoiseTexture(ore.rarity, ore.size, ore.spreadTexture);
+                // Generate ore spawn textures for each ore
             }
         }
-        CreateChunks();
-        AssignBiomes();
-        GenerateTerrain();
-        ColorTerrain();
-        GenerateOres();
-        PlaceBackgroundTiles();
-        CarveCaves();
+
+        // Messing with this order will probably cause a lot of issues.
+
+        CreateChunks(); // Initialize the world's chunks
+        AssignBiomes(); // Assign a biome to each chunk
+        GenerateTerrain(); // Create the general shape of the terrain
+        ColorTerrain(); // Replace the placeholder tiles with the proper ones for this biome
+        GenerateOres(); // Generate clumps of ores depending on the biome
+        PlaceBackgroundTiles(); // For every foreground tile, add a background tile that matches it
+        CarveCaves(); // Remove the foreground tiles in a cave pattern
     }
+
+
     public void GenerateNoiseTexture(float frequency, float limit, Texture2D noiseTexture)
     {
+        // Make a perlin noise texture
         for (int x = 0; x < noiseTexture.width; x++)
         {
             for (int y = 0; y < noiseTexture.height; y++)
@@ -77,6 +83,7 @@ public class TerrainHandler : MonoBehaviour
     }
     public GameObject GetChunk(int x, int y)
     {
+        // Return the chunk at the given coordinates
         try
         {
             float chunkX = (Mathf.Round(x / chunkSize) * chunkSize);
@@ -94,6 +101,7 @@ public class TerrainHandler : MonoBehaviour
 
     public Biome GetBiome(GameObject chunk)
     {
+        // Return the biome of the chunk
 
         foreach (Biome biome in biomes)
         {
@@ -107,6 +115,8 @@ public class TerrainHandler : MonoBehaviour
     }
     public void PlaceTile(int x, int y, Tile tile, bool background=false)
     {
+        // Place a tile at the given x and y. Automatically finds
+        // the proper chunk.
         GameObject chunk = GetChunk(x,y);
         GameObject obj;
         if (background)
@@ -125,6 +135,7 @@ public class TerrainHandler : MonoBehaviour
     
     Tile GetTile(int x, int y, bool background = false)
     {
+        // Get the tile at the given x and y coordinates
         GameObject chunk = GetChunk(x, y);
         if (chunk == null)
         {
@@ -145,6 +156,7 @@ public class TerrainHandler : MonoBehaviour
     }
     void CreateChunks()
     {
+        // Initialize the world's chunks and their tilemaps.
         int numChunksX = xMax / chunkSize;
         int numChunksY = yMax / chunkSize;
         chunks = new GameObject[numChunksX, numChunksY];
@@ -201,6 +213,8 @@ public class TerrainHandler : MonoBehaviour
 
     void GenerateTerrain()
     {
+        // Place placeholder tiles in the shape of the terrain
+
         //print("Generating terrain");
         for (int x = 0; x < xMax; x++)
         {
@@ -270,6 +284,7 @@ public class TerrainHandler : MonoBehaviour
     }
     void GenerateOres()
     {
+        // Generate ores for each chunk
         for (int x = 0; x < xMax; x++)
         {
             Biome biome = GetBiome(GetChunk(x, 0));
@@ -287,6 +302,8 @@ public class TerrainHandler : MonoBehaviour
 
     void CarveCaves()
     {
+        // Remove foreground tiles according to a perlin noise texture
+        // TODO: fix this up, maybe using a different generation method.
         Texture2D caveNoiseTexture = new Texture2D(xMax, yMax);
 
         GenerateNoiseTexture(caveFreq, caveCutoff, caveNoiseTexture);

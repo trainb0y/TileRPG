@@ -4,9 +4,6 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class Biome : ScriptableObject
 {
-    [Header("General Settings")]
-    public string name;
-
     [Header("Generation")]
     public bool generateCaves = true;
     public int heightAddition;

@@ -4,7 +4,6 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu()]
 public class Ore: ScriptableObject
 {
-    public string name;
     public Tile ore;
     [Range(0, 1)]
     public float rarity;

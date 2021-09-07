@@ -376,8 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b3cf9bd2201d464780cb48302ec3317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 127664128}
+  player: {fileID: 127664128}
   offset: {x: 0, y: 5}
+  smoothTime: 0.1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

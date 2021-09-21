@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c326c4fc54b0c1e4394da5e6026b282f, type: 3}
   m_Name: Desert
   m_EditorClassIdentifier: 
-  name: Desert
   generateCaves: 1
   heightAddition: 45
   heightMultiplier: 3
@@ -21,4 +20,25 @@ MonoBehaviour:
   stoneTile: {fileID: 11400000, guid: ba4881bfec736004d8fe0242c75d9297, type: 2}
   dirtHeight: 3
   ores: []
-  backgrounds: []
+  backgrounds:
+  - name: Cacti
+    sprite: {fileID: 21300000, guid: fd17f41dbdb7abf45808cd80396ee059, type: 3}
+    sortingOrder: -3
+    offset: {x: 0, y: 51, z: 0}
+    infiniteX: 1
+    infiniteY: 0
+    parralaxMultiplier: {x: 0.6, y: 0.2}
+  - name: Dunes_Fore
+    sprite: {fileID: 21300000, guid: 702cd1fc46a0b7941bbe399e0d46d025, type: 3}
+    sortingOrder: -4
+    offset: {x: 0, y: 53, z: 0}
+    infiniteX: 1
+    infiniteY: 0
+    parralaxMultiplier: {x: 0.7, y: 0.13}
+  - name: Dunes_Back
+    sprite: {fileID: 21300000, guid: 6033155bc87ca624a8dbb7a0d5f54db7, type: 3}
+    sortingOrder: -5
+    offset: {x: 0, y: 53, z: 0}
+    infiniteX: 1
+    infiniteY: 0
+    parralaxMultiplier: {x: 0.8, y: 0.1}

@@ -9,13 +9,14 @@ public class BlockBreakerTemporary : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 pos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButton(0))
         {
-            terrain.PlaceTile((int)mainCamera.ScreenToWorldPoint(Input.mousePosition).x, (int)mainCamera.ScreenToWorldPoint(Input.mousePosition).y, null, Input.GetKey(KeyCode.B)); ;
+            terrain.PlaceTile((int)pos.x, (int)pos.y, null, Input.GetKey(KeyCode.B));
         }
         if (Input.GetMouseButton(1))
         {
-            terrain.PlaceTile((int)mainCamera.ScreenToWorldPoint(Input.mousePosition).x, (int)mainCamera.ScreenToWorldPoint(Input.mousePosition).y, tile, Input.GetKey(KeyCode.B));
+            terrain.PlaceTile((int)pos.x, (int)pos.y, tile, Input.GetKey(KeyCode.B));
         }
 
     }

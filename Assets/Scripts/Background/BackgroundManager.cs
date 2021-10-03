@@ -31,7 +31,7 @@ public class BackgroundManager : MonoBehaviour
             backgrounds = terrain.GetBiome(terrain.GetChunk((int)playerTransform.position.x, (int)playerTransform.position.y)).backgrounds;
             foreach (GameObject obj in backgroundObjects) {
                 Destroy(obj);
-                backgroundObjects.Remove(obj);
+                //backgroundObjects.Remove(obj);
             }
 
             foreach (Background background in backgrounds)
@@ -43,7 +43,7 @@ public class BackgroundManager : MonoBehaviour
 
     void CreateBackground(Background template)
     {
-        GameObject obj = Instantiate(new GameObject());
+        GameObject obj = new GameObject();
         obj.name = "background_" + template.name;
         obj.transform.parent = transform;
         SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();

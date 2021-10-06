@@ -510,17 +510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c64698d73cb534aa89414740603dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMax: 400
-  yMax: 200
-  chunkSize: 25
+  world: {fileID: 11400000, guid: 495584f766b175ee2b2aaa3709e2eaa8, type: 2}
   placeholderTile: {fileID: 11400000, guid: 615740bede2e52a4eb0d7cbdaaf518ea, type: 2}
-  caveFreq: 0.05
-  terrainFreq: 0.05
-  caveCutoff: 0.3
-  seed: 0
-  biomes:
-  - {fileID: 11400000, guid: 19e1368c793ddaf4f8ae0ae48709757c, type: 2}
-  - {fileID: 11400000, guid: 50bb2b490e8903c4fb5d436552219cbe, type: 2}
 --- !u!4 &1987037134
 Transform:
   m_ObjectHideFlags: 0

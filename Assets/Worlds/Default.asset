@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1732ac5cb3988819599ec195e3bc4c5e, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  worldGenHeight: 500
+  chunkSize: 10
+  caveFreq: 0.05
+  terrainFreq: 0.05
+  caveCutoff: 0.3
+  biomes:
+  - {fileID: 11400000, guid: 19e1368c793ddaf4f8ae0ae48709757c, type: 2}
+  - {fileID: 11400000, guid: 50bb2b490e8903c4fb5d436552219cbe, type: 2}

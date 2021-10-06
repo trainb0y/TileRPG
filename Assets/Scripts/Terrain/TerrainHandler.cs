@@ -50,8 +50,6 @@ public class TerrainHandler : MonoBehaviour
 
         // Messing with this order will probably cause a lot of issues.
 
-        CreateChunks(); // Initialize the world's chunks
-        AssignBiomes(); // Assign a biome to each chunk
         GenerateTerrain(); // Create the general shape of the terrain
         ColorTerrain(); // Replace the placeholder tiles with the proper ones for this biome
         GenerateOres(); // Generate clumps of ores depending on the biome
@@ -153,62 +151,6 @@ public class TerrainHandler : MonoBehaviour
 
         Tilemap tilemap = obj.GetComponent<Tilemap>();
         return (Tile) tilemap.GetTile(new Vector3Int(x, y, 0));
-    }
-    void CreateChunks()
-    {
-        // Initialize the world's chunks and their tilemaps.
-        int numChunksX = xMax / chunkSize;
-        int numChunksY = yMax / chunkSize;
-        chunks = new GameObject[numChunksX, numChunksY];
-        for (int x = 0; x < numChunksX; x++)
-        {
-            for (int y = 0; y < numChunksY; y++)
-            {
-                GameObject chunk = new GameObject();
-                chunk.name = "chunk_" + x.ToString() + "_" + y.ToString();
-                chunk.transform.parent = transform;
-                chunk.isStatic = true;
-
-                chunk.AddComponent<TagHandler>();
-
-                GameObject fg = new GameObject { name = "fg" };
-                fg.AddComponent<Tilemap>();
-                fg.AddComponent<TilemapRenderer>();
-                fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
-                fg.AddComponent<TilemapCollider2D>();
-                fg.isStatic = true;
-                fg.transform.parent = chunk.transform;
-
-                GameObject bg = new GameObject { name = "bg" };
-                bg.AddComponent<Tilemap>();
-                bg.AddComponent<TilemapRenderer>();
-                bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
-                bg.isStatic = true;
-                bg.GetComponent<Tilemap>().color = new Color(0.5f, 0.5f, 0.5f); // temporary, dims the background a bit
-                bg.transform.parent = chunk.transform;
-
-                chunks[x,y] = chunk;
-            }
-        }
-    }
-
-    void AssignBiomes()
-    {
-        // We have to assign biomes for each vertical stack of chunks
-        Biome lastBiome = biomes[0];
-
-        for (int x = 0; x < chunks.GetLength(0); x++)
-        {
-            if (Random.Range(0, 4) == 1)
-            { // 25% chance of a new biome
-                lastBiome = biomes[Random.Range(0, biomes.GetLength(0))];
-            }
-            for (int y = 0; y < chunks.GetLength(1); y++)
-            {
-                //print("Assigning biome " + lastBiome.name + " to chunk " + chunks[x,y].name);
-                chunks[x, y].GetComponent<TagHandler>().tags.Add(lastBiome.name);
-            }
-        }
     }
 
     void GenerateTerrain()
@@ -319,4 +261,59 @@ public class TerrainHandler : MonoBehaviour
             }
         }
     }
+
+    public void GenerateChunk(int x, int y){
+        if (GetChunk(x,y) != null){
+            return;
+        }
+        
+        // First, create the chunk
+
+        GameObject chunk = new GameObject();
+        chunk.name = "chunk_" + x.ToString() + "_" + y.ToString();
+        chunk.transform.parent = transform;
+        chunk.isStatic = true;
+        chunk.AddComponent<TagHandler>();
+
+        GameObject fg = new GameObject { name = "fg" };
+        fg.AddComponent<Tilemap>();
+        fg.AddComponent<TilemapRenderer>();
+        fg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-FG";
+        fg.AddComponent<TilemapCollider2D>();
+        fg.isStatic = true;
+        fg.transform.parent = chunk.transform;
+
+        GameObject bg = new GameObject { name = "bg" };
+        bg.AddComponent<Tilemap>();
+        bg.AddComponent<TilemapRenderer>();
+        bg.GetComponent<TilemapRenderer>().sortingLayerName = "Tiles-BG";
+        bg.isStatic = true;
+        bg.GetComponent<Tilemap>().color = new Color(0.5f, 0.5f, 0.5f); // temporary, dims the background a bit
+        bg.transform.parent = chunk.transform;
+
+        chunks[x,y] = chunk;
+
+        // What biome should this chunk be?
+        Biome[] availableBiomes = new Biome[]{
+            GetBiome(GetChunk(x+chunkSize,y+chunkSize)),
+            GetBiome(GetChunk(x+chunkSize,y-chunkSize)),
+            GetBiome(GetChunk(x-chunkSize,y+chunkSize)),
+            GetBiome(GetChunk(x-chunkSize,y-chunkSize)),
+            biomes[Random.Range(0, biomes.GetLength(0))]
+        };
+
+        int index = Random.Range(0,availableBiomes.Length);
+        while (availableBiomes[index] == null){ // We can't have it be null, it might be null if the other chunks don't exist
+            index = Random.Range(0,availableBiomes.Length);
+        }
+
+        chunk.GetComponent<TagHandler>().tags.Add(availableBiomes[index].name);
+
+
+        // Now that we have the chunk, and know the biome, fill it with tiles
+
+        
+
+    }
+
 }

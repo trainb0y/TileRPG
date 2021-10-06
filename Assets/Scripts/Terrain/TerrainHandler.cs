@@ -3,20 +3,9 @@ using UnityEngine.Tilemaps;
 
 public class TerrainHandler : MonoBehaviour
 {
-    [Header("General Settings")]
-    public int xMax = 100;
-    public int yMax = 100;
-    public int chunkSize = 10;
+    public World world;
     public Tile placeholderTile;
-    [Header("Noise Settings")]
-    public float caveFreq = 0.05f;
-    public float terrainFreq = 0.05f;
-    public float caveCutoff = 0.3f;
-    public float seed;
-    public Biome[] biomes;
-
     private GameObject[,] chunks;
-
     private Grid grid;
 
 
@@ -37,8 +26,12 @@ public class TerrainHandler : MonoBehaviour
 
     void Start()
     {
-        seed = Random.Range(-100000, 100000);
-        foreach (Biome biome in biomes)
+        if (world.seed == null) {
+            world.seed = Random.Range(-100000, 100000);
+        }
+
+
+        foreach (Biome biome in world.biomes)
         {
             foreach (Ore ore in biome.ores)
             {
@@ -49,12 +42,6 @@ public class TerrainHandler : MonoBehaviour
         }
 
         // Messing with this order will probably cause a lot of issues.
-
-        GenerateTerrain(); // Create the general shape of the terrain
-        ColorTerrain(); // Replace the placeholder tiles with the proper ones for this biome
-        GenerateOres(); // Generate clumps of ores depending on the biome
-        PlaceBackgroundTiles(); // For every foreground tile, add a background tile that matches it
-        CarveCaves(); // Remove the foreground tiles in a cave pattern
     }
 
 
@@ -65,7 +52,7 @@ public class TerrainHandler : MonoBehaviour
         {
             for (int y = 0; y < noiseTexture.height; y++)
             {
-                float v = Mathf.PerlinNoise((x + seed) * frequency, (y + seed) * frequency);
+                float v = Mathf.PerlinNoise((x + world.seed) * frequency, (y + world.seed) * frequency);
                 if (v > limit)
                 {
                     noiseTexture.SetPixel(x, y, Color.white);
@@ -84,10 +71,10 @@ public class TerrainHandler : MonoBehaviour
         // Return the chunk at the given coordinates
         try
         {
-            float chunkX = (Mathf.Round(x / chunkSize) * chunkSize);
-            float chunkY = (Mathf.Round(y / chunkSize) * chunkSize);
-            chunkY /= chunkSize;
-            chunkX /= chunkSize;
+            float chunkX = (Mathf.Round(x / world.chunkSize) * world.chunkSize);
+            float chunkY = (Mathf.Round(y / world.chunkSize) * world.chunkSize);
+            chunkY /= world.chunkSize;
+            chunkX /= world.chunkSize;
 
             return chunks[(int)chunkX, (int)chunkY];
         }
@@ -101,7 +88,7 @@ public class TerrainHandler : MonoBehaviour
     {
         // Return the biome of the chunk
 
-        foreach (Biome biome in biomes)
+        foreach (Biome biome in world.biomes)
         {
             if (chunk.GetComponent<TagHandler>().HasTag(biome.name))
             {
@@ -153,6 +140,7 @@ public class TerrainHandler : MonoBehaviour
         return (Tile) tilemap.GetTile(new Vector3Int(x, y, 0));
     }
 
+    /*
     void GenerateTerrain()
     {
         // Place placeholder tiles in the shape of the terrain
@@ -261,6 +249,7 @@ public class TerrainHandler : MonoBehaviour
             }
         }
     }
+    */
 
     public void GenerateChunk(int x, int y){
         if (GetChunk(x,y) != null){
@@ -295,11 +284,11 @@ public class TerrainHandler : MonoBehaviour
 
         // What biome should this chunk be?
         Biome[] availableBiomes = new Biome[]{
-            GetBiome(GetChunk(x+chunkSize,y+chunkSize)),
-            GetBiome(GetChunk(x+chunkSize,y-chunkSize)),
-            GetBiome(GetChunk(x-chunkSize,y+chunkSize)),
-            GetBiome(GetChunk(x-chunkSize,y-chunkSize)),
-            biomes[Random.Range(0, biomes.GetLength(0))]
+            GetBiome(GetChunk(x+world.chunkSize,y+world.chunkSize)),
+            GetBiome(GetChunk(x+world.chunkSize,y-world.chunkSize)),
+            GetBiome(GetChunk(x-world.chunkSize,y+world.chunkSize)),
+            GetBiome(GetChunk(x-world.chunkSize,y-world.chunkSize)),
+            world.biomes[Random.Range(0, world.biomes.GetLength(0))]
         };
 
         int index = Random.Range(0,availableBiomes.Length);

@@ -8,6 +8,8 @@ public class TerrainHandler : MonoBehaviour
     private GameObject[,] chunks;
     private Grid grid;
 
+    private float seed; // Copied from world seed or generated
+
 
     /*
      
@@ -27,9 +29,14 @@ public class TerrainHandler : MonoBehaviour
     void Start()
     {
         if (world.seed == null) {
-            world.seed = Random.Range(-100000, 100000);
+            seed = Random.Range(-100000, 100000);
+        }
+        else{
+            seed = (float) world.seed;
         }
 
+
+        /*
 
         foreach (Biome biome in world.biomes)
         {
@@ -42,6 +49,7 @@ public class TerrainHandler : MonoBehaviour
         }
 
         // Messing with this order will probably cause a lot of issues.
+        */
     }
 
 
@@ -52,7 +60,7 @@ public class TerrainHandler : MonoBehaviour
         {
             for (int y = 0; y < noiseTexture.height; y++)
             {
-                float v = Mathf.PerlinNoise((x + world.seed) * frequency, (y + world.seed) * frequency);
+                float v = Mathf.PerlinNoise((x + seed) * frequency, (y + seed) * frequency);
                 if (v > limit)
                 {
                     noiseTexture.SetPixel(x, y, Color.white);

@@ -11,8 +11,6 @@ public class World : ScriptableObject
     public float caveCutoff = 0.3f;
     public float? seed;
 
-
-    [Header("Biomes")]
     public Biome[] biomes;
 
 

@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 public class TerrainHandler : MonoBehaviour
 {
     public World world;
     public Tile placeholderTile;
-    private GameObject[,] chunks;
+    private Dictionary<int[], GameObject> chunks; // no such thing as a 2d list, and don't want to use array so /shrug
     private Grid grid;
 
     private float seed; // Copied from world seed or generated
@@ -14,6 +15,7 @@ public class TerrainHandler : MonoBehaviour
     /*
      
     The world is divided into chunks
+    Each chunk has 2 tilemaps as children, one for foreground
 
     The chunks are gameobjects
 
@@ -28,12 +30,14 @@ public class TerrainHandler : MonoBehaviour
 
     void Start()
     {
+        chunks = new Dictionary<int[], GameObject>();
         if (world.seed == null) {
             seed = Random.Range(-100000, 100000);
         }
         else{
             seed = (float) world.seed;
         }
+        GenerateChunk(0,0);
 
 
         /*
@@ -74,7 +78,7 @@ public class TerrainHandler : MonoBehaviour
         }
         noiseTexture.Apply();
     }
-    public GameObject GetChunk(int x, int y)
+    public GameObject GetChunk(int x, int y, bool allowNull=false)
     {
         // Return the chunk at the given coordinates
         try
@@ -84,18 +88,27 @@ public class TerrainHandler : MonoBehaviour
             chunkY /= world.chunkSize;
             chunkX /= world.chunkSize;
 
-            return chunks[(int)chunkX, (int)chunkY];
+            return chunks[new int[]{
+                (int)chunkX,
+                (int)chunkY
+            }];
         }
-        catch (System.IndexOutOfRangeException){
-            return null;
+        catch (System.Collections.Generic.KeyNotFoundException){
+            if (!allowNull){
+                throw new ChunkNotFoundException();
+            }
+            else{
+                return null;
+            }
         }
-        
     }
 
     public Biome GetBiome(GameObject chunk)
     {
-        // Return the biome of the chunk
-
+        if (chunk == null){
+            Debug.Log("GetBiome called on null chunk!");
+            return null;
+        }
         foreach (Biome biome in world.biomes)
         {
             if (chunk.GetComponent<TagHandler>().HasTag(biome.name))
@@ -260,7 +273,9 @@ public class TerrainHandler : MonoBehaviour
     */
 
     public void GenerateChunk(int x, int y){
-        if (GetChunk(x,y) != null){
+        // Assume x,y are the minimum values
+
+        if (GetChunk(x,y,true) != null){
             return;
         }
         
@@ -288,14 +303,18 @@ public class TerrainHandler : MonoBehaviour
         bg.GetComponent<Tilemap>().color = new Color(0.5f, 0.5f, 0.5f); // temporary, dims the background a bit
         bg.transform.parent = chunk.transform;
 
-        chunks[x,y] = chunk;
+        chunks.Add(new int[]{
+            (int)x,
+            (int)y
+        }, chunk);
+
 
         // What biome should this chunk be?
         Biome[] availableBiomes = new Biome[]{
-            GetBiome(GetChunk(x+world.chunkSize,y+world.chunkSize)),
-            GetBiome(GetChunk(x+world.chunkSize,y-world.chunkSize)),
-            GetBiome(GetChunk(x-world.chunkSize,y+world.chunkSize)),
-            GetBiome(GetChunk(x-world.chunkSize,y-world.chunkSize)),
+            GetBiome(GetChunk(x+world.chunkSize,y+world.chunkSize,true)),
+            GetBiome(GetChunk(x+world.chunkSize,y-world.chunkSize,true)),
+            GetBiome(GetChunk(x-world.chunkSize,y+world.chunkSize,true)),
+            GetBiome(GetChunk(x-world.chunkSize,y-world.chunkSize,true)),
             world.biomes[Random.Range(0, world.biomes.GetLength(0))]
         };
 
@@ -304,12 +323,26 @@ public class TerrainHandler : MonoBehaviour
             index = Random.Range(0,availableBiomes.Length);
         }
 
-        chunk.GetComponent<TagHandler>().tags.Add(availableBiomes[index].name);
+        Biome biome = availableBiomes[index];
+
+        chunk.GetComponent<TagHandler>().tags.Add(biome.name);
 
 
         // Now that we have the chunk, and know the biome, fill it with tiles
 
-        
+        int heightMultiplier = biome.heightMultiplier;
+        int heightAddition = biome.heightAddition;
+
+        for (int localX = x; localX <= x + world.chunkSize; localX++){
+            float height = Mathf.PerlinNoise((x + seed) * world.terrainFreq, seed * world.terrainFreq) * heightMultiplier + heightAddition;
+            if (height > y + world.chunkSize){
+                height = world.chunkSize; // prevent it from placing above this chunk
+            }
+            for (int localY = y; localY < height && localY < y+world.chunkSize; localY++)
+            {
+                PlaceTile(localX, localY, placeholderTile);
+            }
+        }
 
     }
 

@@ -5,40 +5,21 @@ using System.Collections.Generic;
 public class TerrainHandler : MonoBehaviour
 {
     public World world;
-    public Tile placeholderTile;
     private Dictionary<int[], GameObject> chunks; // no such thing as a 2d list, and don't want to use array so /shrug
-    private Grid grid;
-
     private float seed; // Copied from world seed or generated
-
-
-    /*
-     
-    The world is divided into chunks
-    Each chunk has 2 tilemaps as children, one for foreground
-
-    The chunks are gameobjects
-
-    Each chunk has 2 tilemaps as children, one for foreground
-    one for background.
-
-    This comment is pointless
-
-     */
 
      //float v = Mathf.PerlinNoise((x + seed) * frequency, (y + seed) * frequency);
     
-
-
     void Start()
     {
         chunks = new Dictionary<int[], GameObject>();
         if (world.seed == null) {
-            seed = Random.Range(-100000, 100000);
+            seed = Random.Range(-1000000, 1000000);
         }
         else{
             seed = (float) world.seed;
         }
+
         GenerateChunk(0,0);
     }
 
@@ -68,59 +49,37 @@ public class TerrainHandler : MonoBehaviour
         }
     }
 
-    public Chunk GetChunk(int x, int y){
-        return GetChunkObject(x,y).GetComponent<Chunk>();
+    public Chunk GetChunk(int x, int y, bool allowNull=false){
+        GameObject chunkObj = GetChunkObject(x,y,allowNull);
+        if (chunkObj == null){ // Have to avoid NullRefrenceException when doing GetComponent<>()
+            return null;
+        }
+        return chunkObj.GetComponent<Chunk>();
+        
     }
 
     public Biome GetBiome(GameObject chunkObject){
         return chunkObject.GetComponent<Chunk>().biome;
     }
 
-    public Biome GetBiome(int x, int y){
-        return GetChunk(x,y).biome;
+    public Biome GetBiome(int x, int y, bool allowNullChunk=false){
+        Chunk chunk = GetChunk(x,y,allowNullChunk);
+        if (chunk == null){ // Have to avoid NullRefrenceException when accessing biome
+            return null;
+        }
+        return chunk.biome;
     }
 
 
     public void PlaceWorldTile(int x, int y, Tile tile, bool background=false)
     {
-        // Place a tile at the given x and y. Automatically finds
-        // the proper chunk.
-        GameObject chunk = GetChunkObject(x,y);
-        GameObject obj;
-        if (background)
-        {
-            obj = chunk.transform.Find("bg").gameObject;
-        }
-        else
-        {
-            obj = chunk.transform.Find("fg").gameObject;
-        }
-
-        Tilemap tilemap = obj.GetComponent<Tilemap>();
-        tilemap.SetTile(new Vector3Int(x, y, 0), tile);
-
+        GetChunk(x,y).PlaceTile(x,y,tile,background);
     }
     
-    Tile GetWorldTile(int x, int y, bool background = false)
+    public Tile GetWorldTile(int x, int y, bool background = false)
     {
         // Get the tile at the given x and y coordinates
-        GameObject chunk = GetChunkObject(x, y);
-        if (chunk == null)
-        {
-            return null;
-        }
-        GameObject obj;
-        if (background)
-        {
-            obj = chunk.transform.Find("bg").gameObject;
-        }
-        else
-        {
-            obj = chunk.transform.Find("fg").gameObject;
-        }
-
-        Tilemap tilemap = obj.GetComponent<Tilemap>();
-        return (Tile) tilemap.GetTile(new Vector3Int(x, y, 0));
+        return GetChunk(x,y).GetTile(x,y,background);
     }
 
 

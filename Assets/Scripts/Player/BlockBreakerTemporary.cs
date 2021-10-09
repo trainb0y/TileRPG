@@ -12,11 +12,11 @@ public class BlockBreakerTemporary : MonoBehaviour
         Vector2 pos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButton(0))
         {
-            terrain.PlaceTile((int)pos.x, (int)pos.y, null, Input.GetKey(KeyCode.B));
+            terrain.PlaceWorldTile((int)pos.x, (int)pos.y, null, Input.GetKey(KeyCode.B));
         }
         if (Input.GetMouseButton(1))
         {
-            terrain.PlaceTile((int)pos.x, (int)pos.y, tile, Input.GetKey(KeyCode.B));
+            terrain.PlaceWorldTile((int)pos.x, (int)pos.y, tile, Input.GetKey(KeyCode.B));
         }
 
     }

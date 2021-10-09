@@ -26,9 +26,9 @@ public class BackgroundManager : MonoBehaviour
         // TEMPORARY
         // TODO: actually fade stuff
         
-        if (terrain.GetBiome(terrain.GetChunk((int)playerTransform.position.x, (int)playerTransform.position.y)).backgrounds != backgrounds)
+        if (terrain.GetBiome(terrain.GetChunkObject((int)playerTransform.position.x, (int)playerTransform.position.y)).backgrounds != backgrounds)
         {
-            backgrounds = terrain.GetBiome(terrain.GetChunk((int)playerTransform.position.x, (int)playerTransform.position.y)).backgrounds;
+            backgrounds = terrain.GetBiome(terrain.GetChunkObject((int)playerTransform.position.x, (int)playerTransform.position.y)).backgrounds;
             foreach (GameObject obj in backgroundObjects) {
                 Destroy(obj);
                 //backgroundObjects.Remove(obj);

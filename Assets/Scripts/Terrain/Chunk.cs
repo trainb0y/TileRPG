@@ -110,8 +110,14 @@ public class Chunk : MonoBehaviour
         // Ok we have a biome selected, now make some tiles!
 
         for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize; x++){
+            // Figure out the surface height at this x
+           float height = Mathf.PerlinNoise((x + (float) terrain.world.seed) * terrain.world.terrainFreq, (float) terrain.world.seed * terrain.world.terrainFreq) * 
+           biome.heightMultiplier + biome.heightAddition + terrain.world.worldGenHeight;
+
             for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize; y++){
-                PlaceTile(x,y,biome.dirtTile);
+                if (y < height){
+                    PlaceTile(x,y,biome.dirtTile);
+                }
             }
         }
     }

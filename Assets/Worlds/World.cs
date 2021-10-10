@@ -9,7 +9,7 @@ public class World : ScriptableObject
     public float caveFreq = 0.05f;
     public float terrainFreq = 0.05f;
     public float caveCutoff = 0.3f;
-    public float? seed;
+    public float seed = -1;
 
     public int biomeRate = 10;
 

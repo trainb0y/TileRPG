@@ -14,17 +14,11 @@ public class TerrainHandler : MonoBehaviour
     void Start()
     {
         chunks = new Dictionary<Tuple<int,int>, GameObject>();
-        if (world.seed == null) {
+        if (world.seed == -1) {
             seed = UnityEngine.Random.Range(-1000000, 1000000);
         }
         else{
             seed = (float) world.seed;
-        }
-
-        for (int x = 0; x < 200; x+=world.chunkSize){
-            for (int y = 0; y < 200; y+=world.chunkSize){
-                GenerateChunk(x,y);
-            }
         }
     }
 
@@ -85,7 +79,12 @@ public class TerrainHandler : MonoBehaviour
 
 
     public void GenerateChunk(int x, int y){
+        // Find the nearest valid coordinates for the chunk
+        x -=  x % world.chunkSize;
+        y -=  y % world.chunkSize;
+
         // Assume x,y are the minimum values
+
 
         if (GetChunkObject(x,y,true) != null){
             throw new ChunkExistsException();
@@ -102,6 +101,8 @@ public class TerrainHandler : MonoBehaviour
         Chunk script = chunk.AddComponent<Chunk>();
         script.Create(this, x ,y);
         script.Generate();
+
+        chunk.SetActive(false);
 
     }
 

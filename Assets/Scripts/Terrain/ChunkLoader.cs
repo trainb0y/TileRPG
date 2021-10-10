@@ -10,27 +10,27 @@ public class ChunkLoader : MonoBehaviour
     }
     void LoadChunks()
     {
-        /*
         Vector3 cameraPos = Camera.main.transform.position;
         float height = 2f * Camera.main.orthographicSize;
         float width = height * Camera.main.aspect;
+
+        int xMin = (int)(cameraPos.x - (width / 2) - (terrain.world.chunkSize * chunkPadding));
+        int xMax = (int)(cameraPos.x + (width / 2) + (terrain.world.chunkSize * chunkPadding));
+
+        int yMin = (int)(cameraPos.y - (height / 2) - (terrain.world.chunkSize * chunkPadding));
+        int yMax = (int)(cameraPos.y + (height / 2) + (terrain.world.chunkSize * chunkPadding));
         
-        for (int x = 0; x < terrain.xMax; x += terrain.world.chunkSize)
-        {
-            for (int y = 0; y < terrain.yMax; y += terrain.world.chunkSize)
-            {
-                if ((x > cameraPos.x - (width / 2) - (terrain.world.chunkSize * chunkPadding) && x < cameraPos.x + (width / 2) + (terrain.world.chunkSize * chunkPadding)) &&
-                    (y > cameraPos.y - (height / 2) - (terrain.world.chunkSize * chunkPadding) && y < cameraPos.y + (height / 2) + (terrain.world.chunkSize * chunkPadding)))
-                {
-                    terrain.GetChunk(x, y).SetActive(true);
+        for (int x = xMin; x <= xMax; x += terrain.world.chunkSize){
+            for (int y = yMin; y <= yMax; y += terrain.world.chunkSize){
+                GameObject chunk = terrain.GetChunkObject(x,y,true);
+                if (chunk != null){
+                    chunk.SetActive(true);
                 }
-                else
-                {
-                    terrain.GetChunk(x, y).SetActive(false);
+                else{
+                    terrain.GenerateChunk(x,y);
+                    terrain.GetChunkObject(x,y,true).SetActive(true);
                 }
-                
             }
         }
-        */
     }
 }

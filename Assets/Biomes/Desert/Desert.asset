@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Desert
   m_EditorClassIdentifier: 
   generateCaves: 1
-  heightAddition: 45
-  heightMultiplier: 3
+  heightAddition: 40
+  heightMultiplier: 10
   grassTile: {fileID: 11400000, guid: bd2a2bae5e6a7ae458006185f18f9d81, type: 2}
   dirtTile: {fileID: 11400000, guid: bd2a2bae5e6a7ae458006185f18f9d81, type: 2}
   stoneTile: {fileID: 11400000, guid: ba4881bfec736004d8fe0242c75d9297, type: 2}

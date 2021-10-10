@@ -69,7 +69,7 @@ public class Chunk : MonoBehaviour
         return (Tile) obj.GetComponent<Tilemap>().GetTile(new Vector3Int(x, y, 0));
     }
 
-    public void Generate( ){
+    public void Generate(){
 
         // What biome should this chunk be?
         Biome[] availableBiomes = new Biome[]{
@@ -77,15 +77,36 @@ public class Chunk : MonoBehaviour
             terrain.GetBiome(xOrigin+terrain.world.chunkSize,yOrigin-terrain.world.chunkSize,true),
             terrain.GetBiome(xOrigin-terrain.world.chunkSize,yOrigin+terrain.world.chunkSize,true),
             terrain.GetBiome(xOrigin-terrain.world.chunkSize,yOrigin-terrain.world.chunkSize,true),
-            terrain.world.biomes[Random.Range(0, terrain.world.biomes.GetLength(0))]
+
+            terrain.GetBiome(xOrigin,yOrigin+terrain.world.chunkSize,true),
+            terrain.GetBiome(xOrigin,yOrigin-terrain.world.chunkSize,true),
+            terrain.GetBiome(xOrigin+terrain.world.chunkSize,yOrigin,true),
+            terrain.GetBiome(xOrigin-terrain.world.chunkSize,yOrigin,true),
         };
 
-        int index = Random.Range(0,availableBiomes.Length);
-        while (availableBiomes[index] == null){ // We can't have it be null, it might be null if the other chunks don't exist
-            index = Random.Range(0,availableBiomes.Length);
-        }
-        biome = availableBiomes[index];
+        // For the first chunk we cant randomly select a neighbor one, as there are no neighbors and
+        // finding a non-null one makes an infinite loop, so we need to pick a random biome
 
+        // I don't like this, with the nonNullBiome stuff can it be more efficient?
+        bool allNullBiomes = true;
+        foreach (Biome b in availableBiomes){if (b != null){allNullBiomes = false;}}
+
+        if (allNullBiomes){biome = terrain.world.biomes[Random.Range(0, terrain.world.biomes.GetLength(0))];}
+        
+        else{
+            int index = Random.Range(0,availableBiomes.Length);
+            while (availableBiomes[index] == null){ // We can't have it be null, it might be null if the other chunks don't exist
+                index = Random.Range(0,availableBiomes.Length);
+            }
+            biome = availableBiomes[index];
+
+            // Maybe it should be different from the surroundings
+            if (Random.Range(0, terrain.world.biomeRate) == terrain.world.biomeRate - 1){
+                Debug.Log("Randomly choosing world biome");
+                biome = terrain.world.biomes[Random.Range(0, terrain.world.biomes.GetLength(0))];
+            } 
+        }
+       
         // Ok we have a biome selected, now make some tiles!
 
         for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize; x++){

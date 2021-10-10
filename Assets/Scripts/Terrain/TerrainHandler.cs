@@ -1,26 +1,31 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 using System.Collections.Generic;
 
 public class TerrainHandler : MonoBehaviour
 {
     public World world;
-    private Dictionary<int[], GameObject> chunks; // no such thing as a 2d list, and don't want to use array so /shrug
+    private Dictionary<Tuple<int,int>, GameObject> chunks; // no such thing as a 2d list, and don't want to use array so /shrug
     private float seed; // Copied from world seed or generated
 
      //float v = Mathf.PerlinNoise((x + seed) * frequency, (y + seed) * frequency);
     
     void Start()
     {
-        chunks = new Dictionary<int[], GameObject>();
+        chunks = new Dictionary<Tuple<int,int>, GameObject>();
         if (world.seed == null) {
-            seed = Random.Range(-1000000, 1000000);
+            seed = UnityEngine.Random.Range(-1000000, 1000000);
         }
         else{
             seed = (float) world.seed;
         }
 
-        GenerateChunk(0,0);
+        for (int x = 0; x < 200; x+=world.chunkSize){
+            for (int y = 0; y < 200; y+=world.chunkSize){
+                GenerateChunk(x,y);
+            }
+        }
     }
 
 
@@ -29,15 +34,10 @@ public class TerrainHandler : MonoBehaviour
         // Return the chunk at the given coordinates
         try
         {
-            float chunkX = (Mathf.Round(x / world.chunkSize) * world.chunkSize);
-            float chunkY = (Mathf.Round(y / world.chunkSize) * world.chunkSize);
-            chunkY /= world.chunkSize;
-            chunkX /= world.chunkSize;
+            x -=  x % world.chunkSize;
+            y -=  y % world.chunkSize;
 
-            return chunks[new int[]{
-                (int)chunkX,
-                (int)chunkY
-            }];
+            return chunks[new Tuple<int, int>(x,y)];
         }
         catch (System.Collections.Generic.KeyNotFoundException){
             if (!allowNull){
@@ -88,7 +88,7 @@ public class TerrainHandler : MonoBehaviour
         // Assume x,y are the minimum values
 
         if (GetChunkObject(x,y,true) != null){
-            return;
+            throw new ChunkExistsException();
         }
 
         // First, create the chunk
@@ -97,10 +97,7 @@ public class TerrainHandler : MonoBehaviour
         chunk.transform.parent = transform;
         chunk.isStatic = true;
 
-        chunks.Add(new int[]{
-            (int)x,
-            (int)y
-        }, chunk);
+        chunks.Add(new Tuple<int, int>(x,y), chunk);
 
         Chunk script = chunk.AddComponent<Chunk>();
         script.Create(this, x ,y);

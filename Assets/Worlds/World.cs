@@ -11,6 +11,8 @@ public class World : ScriptableObject
     public float caveCutoff = 0.3f;
     public float? seed;
 
+    public int biomeRate = 10;
+
     public Biome[] biomes;
 
 

@@ -511,7 +511,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 11400000, guid: 495584f766b175ee2b2aaa3709e2eaa8, type: 2}
-  placeholderTile: {fileID: 11400000, guid: 615740bede2e52a4eb0d7cbdaaf518ea, type: 2}
 --- !u!4 &1987037134
 Transform:
   m_ObjectHideFlags: 0

@@ -116,9 +116,23 @@ public class Chunk : MonoBehaviour
 
             for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize; y++){
                 if (y < height){
-                    PlaceTile(x,y,biome.dirtTile);
+                    if (y < height - biome.dirtHeight)
+                    {
+                        PlaceTile(x,y,biome.stoneTile); // foreground
+                        PlaceTile(x,y,biome.stoneTile, true); // background
+                    }
+                    else{
+                        PlaceTile(x,y,biome.dirtTile);
+                        PlaceTile(x,y,biome.dirtTile,true);
+                    }
                 }
             }
         }
+
+        // We have the basic shape, now we need ores
+
+
+
+        // Next is caves
     }
 }

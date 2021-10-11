@@ -69,7 +69,7 @@ public class BackgroundManager : MonoBehaviour
         script.infiniteX = template.infiniteX;
         script.infiniteY = template.infiniteY;
 
-        obj.transform.position += template.offset;
+        obj.transform.position += template.offset + new Vector3(0,terrain.world.worldGenHeight,0);
 
         backgroundObjects.Add(obj);
 

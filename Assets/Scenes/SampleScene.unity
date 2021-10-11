@@ -537,7 +537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f129cfc956f2653478516737a7fdaed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkPadding: 1
+  chunkPadding: 2
+  loadPadding: 4
   terrain: {fileID: 1987037133}
 --- !u!114 &1987037136
 MonoBehaviour:

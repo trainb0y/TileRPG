@@ -30,7 +30,9 @@ public class TerrainHandler : MonoBehaviour
         {
             x -=  x % world.chunkSize;
             y -=  y % world.chunkSize;
-
+            if(chunks[new Tuple<int, int>(x,y)] == null){
+                GenerateChunk(x,y);
+            }
             return chunks[new Tuple<int, int>(x,y)];
         }
         catch (System.Collections.Generic.KeyNotFoundException){
@@ -76,8 +78,6 @@ public class TerrainHandler : MonoBehaviour
         return GetChunk(x,y).GetTile(x,y,background);
     }
 
-
-
     public void GenerateChunk(int x, int y){
         // Find the nearest valid coordinates for the chunk
         x -=  x % world.chunkSize;
@@ -105,5 +105,4 @@ public class TerrainHandler : MonoBehaviour
         chunk.SetActive(false);
 
     }
-
 }

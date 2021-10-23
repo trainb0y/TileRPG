@@ -38,10 +38,10 @@ public class Chunk : MonoBehaviour
 
     public bool InChunk(int x, int y){
         // Check if the coords are within this chunk
-        if (x > xOrigin + terrain.world.chunkSize || x < xOrigin){
+        if (x > xOrigin + terrain.world.chunkSize -1 || x < xOrigin){
             return false;
         }
-        if (y > yOrigin + terrain.world.chunkSize || y < yOrigin){
+        if (y > yOrigin + terrain.world.chunkSize -1 || y < yOrigin){
             return false;
         }
         return true;
@@ -109,12 +109,12 @@ public class Chunk : MonoBehaviour
        
         // Ok we have a biome selected, now make some tiles!
 
-        for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize; x++){
+        for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
             // Figure out the surface height at this x
            float height = Mathf.PerlinNoise((x + (float) terrain.world.seed) * terrain.world.terrainFreq, (float) terrain.world.seed * terrain.world.terrainFreq) * 
            biome.heightMultiplier + biome.heightAddition + terrain.world.worldGenHeight;
 
-            for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize; y++){
+            for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){
                 if (y < height){
                     if (y < height - biome.dirtHeight)
                     {
@@ -130,7 +130,9 @@ public class Chunk : MonoBehaviour
         }
 
         // We have the basic shape, now we need ores
+        foreach (Ore ore in biome.ores){
 
+        }
 
 
         // Next is caves

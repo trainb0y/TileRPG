@@ -23,14 +23,14 @@ public class TerrainHandler : MonoBehaviour
     }
 
 
-    public GameObject GetChunkObject(int x, int y, bool allowNull=false)
+    public GameObject GetChunkObject(int x, int y, bool allowNull=false, bool generateIfNotFound=false)
     {
         // Return the chunk at the given coordinates
         try
         {
-            x -=  x % world.chunkSize;
+            x -=  x % world.chunkSize; // Rounding issues, maybe?
             y -=  y % world.chunkSize;
-            if(chunks[new Tuple<int, int>(x,y)] == null){
+            if(chunks[new Tuple<int, int>(x,y)] == null && generateIfNotFound    ){
                 GenerateChunk(x,y);
             }
             return chunks[new Tuple<int, int>(x,y)];
@@ -103,6 +103,5 @@ public class TerrainHandler : MonoBehaviour
         script.Generate();
 
         chunk.SetActive(false);
-
     }
 }

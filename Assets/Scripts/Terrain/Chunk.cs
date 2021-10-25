@@ -130,11 +130,23 @@ public class Chunk : MonoBehaviour
         }
 
         // We have the basic shape, now we need ores
-        foreach (Ore ore in biome.ores){
 
+        // Maybe we can just iterate over the chunk's tiles once?
+        // TODO: make this better lol
+        foreach (Ore ore in biome.ores){
+            for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
+                for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){ // Is there a better way to iterate over the tiles?
+                    if (y < ore.maxSpawnHeight + terrain.world.worldGenHeight){
+                        if (Mathf.PerlinNoise((x + terrain.world.seed) * ore.rarity, (y + terrain.world.seed) * ore.rarity) > ore.size){
+                            PlaceTile(x,y, ore.ore); // foreground
+                            PlaceTile(x,y, ore.ore, true); // background
+                        }
+                    }
+                }
+            }
         }
 
 
-        // Next is caves
+        // Next is cavesa
     }
 }

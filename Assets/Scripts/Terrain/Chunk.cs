@@ -138,8 +138,8 @@ public class Chunk : MonoBehaviour
                 for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){ // Is there a better way to iterate over the tiles?
                     if (y < ore.maxSpawnHeight + terrain.world.worldGenHeight){
                         if (Mathf.PerlinNoise((x + terrain.world.seed) * ore.rarity, (y + terrain.world.seed) * ore.rarity) > ore.size){
-                            PlaceTile(x,y, ore.ore); // foreground
-                            PlaceTile(x,y, ore.ore, true); // background
+                            PlaceTile(x,y, ore.tile); // foreground
+                            PlaceTile(x,y, ore.tile, true); // background
                         }
                     }
                 }

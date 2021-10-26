@@ -78,6 +78,19 @@ public class TerrainHandler : MonoBehaviour
         return GetChunk(x,y).GetTile(x,y,background);
     }
 
+    public Tile GetWorldTileOrNull(int x, int y, bool background = false)
+    {
+        // Get the tile at the given x and y coordinates, null if it doesn't exist
+        try {
+            return GetChunk(x,y,true)?.GetTile(x,y,background);
+        }
+        catch {
+            return null; // This catch all here seems dangerous, I don't like it at all
+                         // TODO: Make this less dumb
+        }
+        
+    }
+
     public void GenerateChunk(int x, int y){
         // Find the nearest valid coordinates for the chunk
         x -=  x % world.chunkSize;

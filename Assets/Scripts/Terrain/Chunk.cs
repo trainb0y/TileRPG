@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,7 +70,71 @@ public class Chunk : MonoBehaviour
         return (Tile) obj.GetComponent<Tilemap>().GetTile(new Vector3Int(x, y, 0));
     }
 
+    public Dictionary<Tuple<int,int>, bool> MooreSmoothing(Dictionary<Tuple<int,int>, bool> map, int x, int y){
+        // Returns true if it should be a tile, else false
+
+
+        // https://blog.unity.com/technology/procedural-patterns-to-use-with-tilemaps-part-ii
+        /*
+        If a neighbour is a tile, add one to the count
+        If a neighbour is air, don't
+        If the cell has more than 4 surrounding tiles, make the cell a tile.
+        If the cell has exactly 4 surrounding tiles, leave the tile alone.
+        */
+        int count = 0;
+        Dictionary<Tuple<int, int>, bool> newMap = new Dictionary<Tuple<int, int>, bool>();
+
+        for (int x1 = x - (terrain.world.chunkSize * 2); x1 < x + (terrain.world.chunkSize * 2); x1++)
+        {
+            for (int y1 = y - (terrain.world.chunkSize * 2); y1 < y + (terrain.world.chunkSize * 2); y1++)
+            {
+                for(int x2 = x1 - 1; x2 <= x1 + 1; x2++)
+                {
+                    for(int y2 = y1 - 1; y2 <= y1 + 1; y2++)
+                    {      
+                        // x1, y1 are badly named, ik, but they are the coordinates of the neighbor we are checking
+                        // Don't include this tile
+                        if(x2 != x1 || y2 != y1)
+                        {
+                            if (map[new Tuple<int, int>(x2,y2)]){
+                                count += 1;
+                            }
+                        }
+                    }
+                }
+                newMap[new Tuple<int, int>(x,y)] = count > 4;
+            }
+        }
+        return newMap;
+    }
+ 
+    public Dictionary<Tuple<int,int>, bool> GenerateCaves(int x, int y){
+        // Generate caves 
+        System.Random rand = new System.Random(terrain.world.seed.GetHashCode());
+        Dictionary<Tuple<int,int>, bool> map = new Dictionary<Tuple<int,int>, bool>();
+
+        for (int x1 = x - (terrain.world.chunkSize * 2); x1 < x + (terrain.world.chunkSize * 2); x1++)
+        {
+            for (int y1 = y - (terrain.world.chunkSize * 2); y1 < y + (terrain.world.chunkSize * 2); y1++)
+            {
+                //Randomly generate the grid
+                //map[new Tuple<int, int>(x1,y1)] = (rand.Next(0, 100) < terrain.world.caveFillPercent) ? true : false;
+                // RAND.NEXT IS NOT GOING TO WORK AS IT DOESN'T COMPENSATE FOR THE COORDINATES OF THIS CHUNK
+                // Going to try perlin noise, though it might do weird things
+                map[new Tuple<int, int>(x1,y1)] = Mathf.PerlinNoise(x1,y1) * 100 < terrain.world.caveFillPercent;
+            }
+        }
+
+        for (int i = 0; i <= terrain.world.caveSmoothAmount; i++){
+            map = MooreSmoothing(map,x,y); // Smooth the map
+        }
+    
+        return map;
+
+    }
+
     public void Generate(){
+        // Make the chunk actually have terrain
 
         // What biome should this chunk be?
         Biome[] availableBiomes = new Biome[]{
@@ -147,6 +212,26 @@ public class Chunk : MonoBehaviour
         }
 
 
-        // Next is cavesa
+        // Next is caves. Start with some basic noise
+        // Basically following https://blog.unity.com/technology/procedural-patterns-to-use-with-tilemaps-part-ii
+
+        /*
+        So, we can't rely on any of the surrounding chunks existing, but we still need to pretend they do.
+        DISCLAIMER: anyone who gives a crap about optimization please look away and save yourself.
+
+        In order to have a decent idea of what the surrounding chunks would look like if they were generated we can generate
+        noise for a couple layers of fake chunk surrounding the one we actually care about. The smoothing will mess up the edges
+        of those fake chunks, but since they aren't in the game, we don't care. As the noise is seeded, and the smoothing has the same
+        result every time, the caves in different chunks *should* in theory line up.
+        */
+
+        Dictionary<Tuple<int,int>, bool> caves = GenerateCaves(xOrigin,yOrigin); 
+        for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
+            for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){ // Is there a better way to iterate over the tiles?
+                if (caves[new Tuple<int,int>(x,y)]){
+                    PlaceTile(x,y, null);
+                }
+            }
+        }
     }
 }

@@ -15,5 +15,9 @@ public class World : ScriptableObject
 
     public Biome[] biomes;
 
+    public int caveFillPercent = 50;
+
+    public int caveSmoothAmount = 5;
+
 
 }

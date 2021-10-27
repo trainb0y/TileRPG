@@ -22,3 +22,5 @@ MonoBehaviour:
   biomes:
   - {fileID: 11400000, guid: 19e1368c793ddaf4f8ae0ae48709757c, type: 2}
   - {fileID: 11400000, guid: 50bb2b490e8903c4fb5d436552219cbe, type: 2}
+  caveFillPercent: 50
+  caveSmoothAmount: 6

@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,28 +81,33 @@ public class Chunk : MonoBehaviour
         If the cell has more than 4 surrounding tiles, make the cell a tile.
         If the cell has exactly 4 surrounding tiles, leave the tile alone.
         */
-        int count = 0;
         Dictionary<Tuple<int, int>, bool> newMap = new Dictionary<Tuple<int, int>, bool>();
 
         for (int x1 = x - (terrain.world.chunkSize * 2); x1 < x + (terrain.world.chunkSize * 2); x1++)
         {
             for (int y1 = y - (terrain.world.chunkSize * 2); y1 < y + (terrain.world.chunkSize * 2); y1++)
             {
-                for(int x2 = x1 - 1; x2 <= x1 + 1; x2++)
+                // For each tile
+                 int count = 0;
+                for (int x2 = x1 - 1; x2 <= x1 + 1; x2++)
                 {
-                    for(int y2 = y1 - 1; y2 <= y1 + 1; y2++)
+                    for (int y2 = y1 - 1; y2 <= y1 + 1; y2++)
                     {      
+                        // For each tile surrounding that tile
                         // x1, y1 are badly named, ik, but they are the coordinates of the neighbor we are checking
                         // Don't include this tile
                         if(x2 != x1 || y2 != y1)
-                        {
-                            if (map[new Tuple<int, int>(x2,y2)]){
-                                count += 1;
+                        { 
+                            try{
+                                if (map[new Tuple<int, int>(x2,y2)]){count += 1;}  // This shouldn't happen, but it does
                             }
+                            catch (System.Collections.Generic.KeyNotFoundException){
+                                map[new Tuple<int, int>(x2,y2)] = false;
+                            } // TODO: Investigate why this would ever happen
                         }
                     }
                 }
-                newMap[new Tuple<int, int>(x,y)] = count > 4;
+                newMap[new Tuple<int, int>(x1,y1)] = count > 4;
             }
         }
         return newMap;
@@ -110,21 +115,25 @@ public class Chunk : MonoBehaviour
  
     public Dictionary<Tuple<int,int>, bool> GenerateCaves(int x, int y){
         // Generate caves 
-        System.Random rand = new System.Random(terrain.world.seed.GetHashCode());
         Dictionary<Tuple<int,int>, bool> map = new Dictionary<Tuple<int,int>, bool>();
 
-        for (int x1 = x - (terrain.world.chunkSize * 2); x1 < x + (terrain.world.chunkSize * 2); x1++)
+        for (int x1 = x - (terrain.world.chunkSize * 3); x1 < x + (terrain.world.chunkSize * 3); x1++)
         {
-            for (int y1 = y - (terrain.world.chunkSize * 2); y1 < y + (terrain.world.chunkSize * 2); y1++)
+            for (int y1 = y - (terrain.world.chunkSize * 3); y1 < y + (terrain.world.chunkSize * 3); y1++) // the multiplier here needs to be bigger than the one in smoothing
             {
                 //Randomly generate the grid
-                //map[new Tuple<int, int>(x1,y1)] = (rand.Next(0, 100) < terrain.world.caveFillPercent) ? true : false;
+                //System.Random rand = new System.Random(terrain.seed.GetHashCode());
+                //map[new Tuple<int, int>(x1,y1)] = (rand.Next(0, 100) < terrain.world.caveFillPercent);
                 // RAND.NEXT IS NOT GOING TO WORK AS IT DOESN'T COMPENSATE FOR THE COORDINATES OF THIS CHUNK
                 // Going to try perlin noise, though it might do weird things
-                map[new Tuple<int, int>(x1,y1)] = Mathf.PerlinNoise(x1,y1) * 100 < terrain.world.caveFillPercent;
+
+                // Can't leave the perlin noise on its own, or else it generates bad perlin noise caves, so we have to uh, do something
+                map[new Tuple<int, int>(x1,y1)] = (Mathf.PerlinNoise((x1*3)+terrain.seed,(y1*3)+terrain.seed) * 100f < terrain.world.caveFillPercent);
+                //map[new Tuple<int, int>(x1,y1)] = UnityEngine.Random.Range(0,100) > 35;
             }
         }
 
+        
         for (int i = 0; i <= terrain.world.caveSmoothAmount; i++){
             map = MooreSmoothing(map,x,y); // Smooth the map
         }
@@ -156,19 +165,21 @@ public class Chunk : MonoBehaviour
         bool allNullBiomes = true;
         foreach (Biome b in availableBiomes){if (b != null){allNullBiomes = false;}}
 
-        if (allNullBiomes){biome = terrain.world.biomes[Random.Range(0, terrain.world.biomes.GetLength(0))];}
+        System.Random rand = new System.Random(terrain.seed.GetHashCode());
+
+        if (allNullBiomes){biome = terrain.world.biomes[rand.Next(0, terrain.world.biomes.GetLength(0))];}
         
         else{
-            int index = Random.Range(0,availableBiomes.Length);
+            int index = rand.Next(0,availableBiomes.Length);
             while (availableBiomes[index] == null){ // We can't have it be null, it might be null if the other chunks don't exist
-                index = Random.Range(0,availableBiomes.Length);
+                index = rand.Next(0,availableBiomes.Length);
             }
             biome = availableBiomes[index];
 
             // Maybe it should be different from the surroundings
-            if (Random.Range(0, terrain.world.biomeRate) == terrain.world.biomeRate - 1){
+            if (rand.Next(0, terrain.world.biomeRate) == terrain.world.biomeRate - 1){
                 Debug.Log("Randomly choosing world biome");
-                biome = terrain.world.biomes[Random.Range(0, terrain.world.biomes.GetLength(0))];
+                biome = terrain.world.biomes[rand.Next(0, terrain.world.biomes.GetLength(0))];
             } 
         }
        
@@ -176,7 +187,7 @@ public class Chunk : MonoBehaviour
 
         for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
             // Figure out the surface height at this x
-           float height = Mathf.PerlinNoise((x + (float) terrain.world.seed) * terrain.world.terrainFreq, (float) terrain.world.seed * terrain.world.terrainFreq) * 
+           float height = Mathf.PerlinNoise((x + (float) terrain.seed) * terrain.world.terrainFreq, (float) terrain.seed * terrain.world.terrainFreq) * 
            biome.heightMultiplier + biome.heightAddition + terrain.world.worldGenHeight;
 
             for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){
@@ -202,7 +213,7 @@ public class Chunk : MonoBehaviour
             for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
                 for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){ // Is there a better way to iterate over the tiles?
                     if (y < ore.maxSpawnHeight + terrain.world.worldGenHeight){
-                        if (Mathf.PerlinNoise((x + terrain.world.seed) * ore.rarity, (y + terrain.world.seed) * ore.rarity) > ore.size){
+                        if (Mathf.PerlinNoise((x + terrain.seed) * ore.rarity, (y + terrain.seed) * ore.rarity) > ore.size){
                             PlaceTile(x,y, ore.tile); // foreground
                             PlaceTile(x,y, ore.tile, true); // background
                         }
@@ -228,7 +239,7 @@ public class Chunk : MonoBehaviour
         Dictionary<Tuple<int,int>, bool> caves = GenerateCaves(xOrigin,yOrigin); 
         for (int x = xOrigin; x <= xOrigin + terrain.world.chunkSize - 1; x++){
             for (int y = yOrigin; y <= yOrigin + terrain.world.chunkSize - 1; y++){ // Is there a better way to iterate over the tiles?
-                if (caves[new Tuple<int,int>(x,y)]){
+                if (!caves[new Tuple<int,int>(x,y)]){
                     PlaceTile(x,y, null);
                 }
             }

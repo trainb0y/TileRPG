@@ -7,7 +7,7 @@ public class TerrainHandler : MonoBehaviour
 {
     public World world;
     private Dictionary<Tuple<int,int>, GameObject> chunks; // no such thing as a 2d list, and don't want to use array so /shrug
-    private float seed; // Copied from world seed or generated
+    public float seed; // Copied from world seed or generated
 
      //float v = Mathf.PerlinNoise((x + seed) * frequency, (y + seed) * frequency);
     
@@ -18,7 +18,7 @@ public class TerrainHandler : MonoBehaviour
             seed = UnityEngine.Random.Range(-1000000, 1000000);
         }
         else{
-            seed = (float) world.seed;
+            seed = world.seed;
         }
     }
 

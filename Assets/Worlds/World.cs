@@ -3,21 +3,16 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class World : ScriptableObject
 {
-    [Header("Generation")]
+    [Header("World Settings")]
     public int worldGenHeight = 500;
     public int chunkSize = 10;
-    public float caveFreq = 0.05f;
     public float terrainFreq = 0.05f;
-    public float caveCutoff = 0.3f;
     public float seed = -1;
-
     public int biomeRate = 10;
-
     public Biome[] biomes;
 
-    public int caveFillPercent = 50;
-
-    public int caveSmoothAmount = 5;
-
-
+    [Header("Caves")]
+    public int caveNoiseLayers = 3;
+    public float caveCutoff = 0.3f;
+    public float caveFrequency = 0.4f;
 }

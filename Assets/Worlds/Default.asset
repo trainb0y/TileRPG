@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldGenHeight: 500
   chunkSize: 10
-  terrainFreq: 0.05
+  terrainFrequency: 0.05
   seed: -392340
   biomeRate: 20
   biomes:
   - {fileID: 11400000, guid: 19e1368c793ddaf4f8ae0ae48709757c, type: 2}
   - {fileID: 11400000, guid: 50bb2b490e8903c4fb5d436552219cbe, type: 2}
-  caveNoiseLayers: 2
+  caveBaseMaxHeight: 470
+  caveMaxHeightFrequency: 0.03
+  caveMaxHeightAmplitude: 40
+  caveNoiseLayers: 1
   caveCutoff: 0.46
-  caveFrequency: 0.1
+  caveFrequency: 0.08

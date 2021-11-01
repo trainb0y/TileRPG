@@ -116,7 +116,7 @@ public class Chunk : MonoBehaviour
 
         for (int x = xOrigin; x < xOrigin + terrain.world.chunkSize; x++){
             // Figure out the surface height at this x
-           float height = Mathf.PerlinNoise((x + (float) terrain.seed) * terrain.world.terrainFreq, (float) terrain.seed * terrain.world.terrainFreq) * 
+           float height = Mathf.PerlinNoise((x + (float) terrain.seed) * terrain.world.terrainFrequency, (float) terrain.seed * terrain.world.terrainFrequency) * 
            biome.heightMultiplier + biome.heightAddition + terrain.world.worldGenHeight;
 
             for (int y = yOrigin; y < yOrigin + terrain.world.chunkSize; y++){
@@ -158,9 +158,13 @@ public class Chunk : MonoBehaviour
         if (biome.generateCaves){
             for (int x = xOrigin; x < xOrigin + terrain.world.chunkSize; x++){
                 for (int y = yOrigin; y < yOrigin + terrain.world.chunkSize; y++){ // Is there a better way to iterate over the tiles?
-                    for (int i = 1; i <= terrain.world.caveNoiseLayers; i++){
-                        if(Mathf.PerlinNoise((x+(terrain.seed*i))*terrain.world.caveFrequency,(y+(terrain.seed*i))*terrain.world.caveFrequency) < terrain.world.caveCutoff){
-                            PlaceTile(x,y,null);
+                    // To prevent the caves from making swiss cheese of the ground, lets make another perlin noise
+                    // wave that determines the max height for the caves.
+                    if (y < Mathf.PerlinNoise((x + (float) terrain.seed) * terrain.world.caveMaxHeightFrequency, (float) terrain.seed * terrain.world.caveMaxHeightFrequency) * terrain.world.caveMaxHeightAmplitude + terrain.world.caveBaseMaxHeight){
+                        for (int i = 1; i <= terrain.world.caveNoiseLayers; i++){
+                            if(Mathf.PerlinNoise((x+(terrain.seed*i))*terrain.world.caveFrequency,(y+(terrain.seed*i))*terrain.world.caveFrequency) < terrain.world.caveCutoff){
+                                PlaceTile(x,y,null);
+                            }
                         }
                     }
                 }   

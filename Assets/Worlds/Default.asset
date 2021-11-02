@@ -15,7 +15,7 @@ MonoBehaviour:
   worldGenHeight: 500
   chunkSize: 10
   terrainFrequency: 0.05
-  seed: -392340
+  seed: -1
   biomeRate: 20
   biomes:
   - {fileID: 11400000, guid: 19e1368c793ddaf4f8ae0ae48709757c, type: 2}
@@ -23,6 +23,6 @@ MonoBehaviour:
   caveBaseMaxHeight: 470
   caveMaxHeightFrequency: 0.03
   caveMaxHeightAmplitude: 40
-  caveNoiseLayers: 1
-  caveCutoff: 0.46
-  caveFrequency: 0.08
+  caveNoiseLayers: 3
+  caveCutoff: 0.3
+  caveFrequency: 0.4

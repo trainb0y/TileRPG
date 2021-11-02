@@ -161,10 +161,12 @@ public class Chunk : MonoBehaviour
                     // To prevent the caves from making swiss cheese of the ground, lets make another perlin noise
                     // wave that determines the max height for the caves.
                     if (y < Mathf.PerlinNoise((x + (float) terrain.seed) * terrain.world.caveMaxHeightFrequency, (float) terrain.seed * terrain.world.caveMaxHeightFrequency) * terrain.world.caveMaxHeightAmplitude + terrain.world.caveBaseMaxHeight){
-                        for (int i = 1; i <= terrain.world.caveNoiseLayers; i++){
-                            if(Mathf.PerlinNoise((x+(terrain.seed*i))*terrain.world.caveFrequency,(y+(terrain.seed*i))*terrain.world.caveFrequency) < terrain.world.caveCutoff){
+                        int i = 1;
+                        foreach (CaveLayer layer in terrain.world.caveLayers){
+                            if(Mathf.PerlinNoise((x+(terrain.seed*i))*layer.frequency,(y+(terrain.seed*i))*layer.frequency) < layer.cutoff){
                                 PlaceTile(x,y,null);
                             }
+                            i++; // Might just be better do do a for i... not foreach, but eh
                         }
                     }
                 }   
